@@ -6,11 +6,7 @@ pipeline {
             			checkout scm 
             		}
    	     	}
-		stage('git status'){
-			steps{
-				git status
-			}
-		}
+		
    	}
 	post{
 		failure {
@@ -18,7 +14,7 @@ pipeline {
           		subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
           		body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
             		<p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
-          		to: 'ifham.andpercent@gmail.com'
+          		to: 'ifham.andpercent@gmail.com, farooq.andpercent@gmail.com'
         		)
     		}
 		success {
@@ -26,7 +22,7 @@ pipeline {
 			subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
         		body: """<p>SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
 			<p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
-			to: 'ifham.andpercent@gmail.com'
+			to: 'ifham.andpercent@gmail.com, farooq.andpercent@gmail.com'
       	  		)
     		}
 	}
