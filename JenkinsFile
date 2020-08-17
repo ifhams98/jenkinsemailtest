@@ -6,11 +6,7 @@ pipeline {
             			checkout scm 
             		}
    	     	}
-		stage('git status'){
-			steps{
-				git status
-			}
-		}
+		
 		
    	}
 	post{
