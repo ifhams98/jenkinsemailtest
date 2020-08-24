@@ -6,6 +6,11 @@ pipeline {
             			checkout scm 
             		}
 		}
+		stage('Clone repository') {
+            		steps {	  
+            			checkout scm 
+            		}
+		}
 		
    	}
 	post{
