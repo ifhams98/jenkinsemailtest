@@ -8,13 +8,21 @@ pipeline {
             			checkout scm 
             		}
 		}
+		stage('get_commit_details') {
+        		steps {
+            			script {
+                			env.GIT_COMMIT_MSG = sh (script: 'git log -1 --pretty=%B ${GIT_COMMIT}', returnStdout: true).trim()
+               				env.GIT_AUTHOR = sh (script: 'git log -1 --pretty=%cn ${GIT_COMMIT}', returnStdout: true).trim()
+            			}
+        		}
+    		}
 	}
 	
 	post{
 		failure {
       			emailext(
           		subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-          		body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p><p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT; Developer Name: '${env.DevelopersRecipientProvider}'; </p>""",
+          		body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p><p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT; </p>""",
             		
 			to: '$DEFAULT_RECIPIENTS',
           		recipientProviders: [[$class: 'DevelopersRecipientProvider']]
@@ -23,7 +31,7 @@ pipeline {
 		success {
 			emailext (
 			subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-			body: """<p>SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p><p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT; Developer Name: $DevelopersRecipientProvider; </p>""",
+			body: """<p>SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p><p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT; </p>""",
             		to: '$DEFAULT_RECIPIENTS',
 			recipientProviders: [[$class: 'DevelopersRecipientProvider']]
       	  	)
