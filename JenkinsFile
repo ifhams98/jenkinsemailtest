@@ -8,29 +8,24 @@ pipeline {
             			checkout scm 
             		}
 		}
-		stage('Test API Rest') {
-        		steps {
-            			sh 'newman run /home/ubuntu/apis_test/virtualTradeshow.postman_collection.json -e /home/ubuntu/apis_test/env1.postman_environment.json'
-   			}
-		}
 	}
 	
 	post{
 		failure {
-      			emailext (
+      			emailext(
           		subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-          		body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-            		<p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
-          		to: '$DEFAULT_RECIPIENTS'
-        		)
+          		body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p><p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT; Developer Name: [[$class: 'DevelopersRecipientProvider']]; </p>""",
+            		
+			to: '$DEFAULT_RECIPIENTS',
+          		recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+        	)
     		}
 		success {
 			emailext (
-			subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-        		body: """<p>SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-			<p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
-			to: '$DEFAULT_RECIPIENTS'
-      	  		)
+			subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",body: """<p>SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p><p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT; Developer Name: [[$class: 'DevelopersRecipientProvider']]; </p>""",
+            		to: '$DEFAULT_RECIPIENTS',
+			recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+      	  	)
     		}
 		unstable{
 			emailext (
